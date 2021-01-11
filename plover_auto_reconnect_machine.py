@@ -10,7 +10,7 @@ from threading import Condition, Event, Thread
 
 
 
-class AutoReconnectMachine(Thread):
+class AutoReconnectMachine:
     """Listen to the machine state and try to automatically
        reconnect as soon as the connection is available again."""
 
@@ -20,11 +20,12 @@ class AutoReconnectMachine(Thread):
         self._engine: StenoEngine = engine
         self._lock = Condition()
         self._stop = Event()
+        self._thread = Thread(target=self.run)
 
     def start(self):
         log.info('plover-auto-reconnect-machine: starting')
         self._engine.hook_connect("machine_state_changed", self._on_machine_state_changed)
-        super().start()
+        self._thread.start()
 
     def stop(self):
         log.info('plover-auto-reconnect-machine: stopping')
