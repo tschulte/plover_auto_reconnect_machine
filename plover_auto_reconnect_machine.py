@@ -20,7 +20,7 @@ class AutoReconnectMachine:
         self._engine: StenoEngine = engine
         self._lock = Condition()
         self._stop = Event()
-        self._thread = Thread(self)
+        self._thread = Thread(target=self.run)
 
     def start(self):
         log.info('plover-auto-reconnect-machine: starting')
